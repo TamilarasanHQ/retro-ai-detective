@@ -1253,17 +1253,20 @@ games = {}
 def make_game():
     game_id = str(uuid.uuid4())
     
-    # 1. Randomize Suspects
-    available_suspect_ids = list(SUSPECT_PROFILES.keys())
-    chosen_suspect_ids = random.sample(available_suspect_ids, 3)
-    killer_id = random.choice(chosen_suspect_ids)
+    # 1. Randomly select 3 different suspects from all available profiles
+    all_suspect_keys = list(SUSPECT_PROFILES.keys())
+    selected_profile_keys = random.sample(all_suspect_keys, min(3, len(all_suspect_keys)))
+    
+    # Map selected profiles to A, B, C for frontend consistency
+    api_suspect_ids = ['A', 'B', 'C']
+    killer_id = random.choice(api_suspect_ids)
     
     suspects = {}
-    for suspect_id in chosen_suspect_ids:
-        profile = SUSPECT_PROFILES[suspect_id]
+    for api_id, profile_key in zip(api_suspect_ids, selected_profile_keys):
+        profile = SUSPECT_PROFILES[profile_key]
         mood, mood_icon = get_mood(20)
-        suspects[suspect_id] = {
-            'id': suspect_id,
+        suspects[api_id] = {
+            'id': api_id,
             'name': profile['name'],
             'alias': profile['alias'],
             'title': profile['title'],
@@ -1272,7 +1275,7 @@ def make_game():
             'motive': profile['motive'],
             'bio': profile['bio'],
             'icon': profile['icon'],
-            'role': 'killer' if suspect_id == killer_id else 'innocent',
+            'role': 'killer' if api_id == killer_id else 'innocent',
             'history': [],
             'score': 20,
             'mood': mood,
@@ -1283,18 +1286,18 @@ def make_game():
             'base_alibi': profile['base_alibi']
         }
     
-    # 2. Randomize Case Details
+    # 2. Randomly select a case from available cases
     selected_case = random.choice(CASE_FILES).copy()
     
     old_conn = list(selected_case.get('connections', {}).values())
     new_conn = {}
-    for i, sid in enumerate(chosen_suspect_ids):
+    for i, api_id in enumerate(api_suspect_ids):
         fallback_role = "Was seen near the crime scene."
         role_text = old_conn[i] if i < len(old_conn) else fallback_role
-        new_conn[sid] = f"{suspects[sid]['name']} - {role_text}"
+        new_conn[api_id] = f"{suspects[api_id]['name']} - {role_text}"
     
     selected_case['connections'] = new_conn
-    selected_case['suspects_involved'] = chosen_suspect_ids
+    selected_case['suspects_involved'] = api_suspect_ids
     
     game = {
         'game_id': game_id,
@@ -1303,7 +1306,7 @@ def make_game():
         'question_count': 0,
         'questions_asked': 0,
         'time_remaining': TIME_LIMIT_HOURS,
-        'question_history': {sid: [] for sid in chosen_suspect_ids},
+        'question_history': {api_id: [] for api_id in api_suspect_ids},
         'created': True,
         'case': selected_case
     }
@@ -1336,6 +1339,10 @@ This is not a malfunction-it is the new reality of the interrogation. Embrace th
 """
 
     tells = profile.get('tells', ['touches face', 'voice wavers', 'blinks rapidly', 'shifts weight'])
+    
+    adaptation_note = ""
+    if suspect['score'] >= 60:
+        adaptation_note = f"# Adaptation (Suspect becoming unraveled)\nNotable: Their tension level is at {suspect['score']}% - they should be showing signs of stress."
 
     system_content = f"""You are an advanced game design engine roleplaying as {profile['name']} ({profile['alias']}), a suspect in a detective game.
 {anti_gravity_context}
@@ -1370,10 +1377,10 @@ Case Evidence (if mentioned, react with appropriate gravity distortion):
 {evidence_str}
 
 CRITICAL DIRECTIVES:
-1. NEVER break character. You ARE the suspect in zero-G.
-2. Use *action cues* in asterisks to show physical drifting, e.g., *floats slightly to the left*, *rubs temples as if disoriented*.
-3. Keep answers concise but allow natural drift. It's okay to contradict a minor detail you mentioned earlier-blame it on the lack of gravity.
-4. If your Strategy is 'Slip Up Contradiction', make the contradiction feel like a floating thought that just escaped.
+1. NEVER break character. You ARE the suspect being questioned.
+2. Keep answers concise and focused on answering the detective's question.
+3. Respond naturally without any asterisks, brackets, or stage directions.
+4. If your Strategy is 'Slip Up Contradiction', make the contradiction feel natural and unintentional.
 """
     return [
         {'role': 'system', 'content': system_content},
@@ -1399,10 +1406,22 @@ def call_openrouter(messages):
         response.raise_for_status()
         data = response.json()
         if 'choices' in data and data['choices']:
-            return data['choices'][0].get('message', {}).get('content', '').strip()
+            answer = data['choices'][0].get('message', {}).get('content', '').strip()
+            # Strip action cues like *description* from the response
+            answer = remove_action_cues(answer)
+            return answer
         return 'The AI failed to produce an answer.'
     except Exception as exc:
         return f'Error: {str(exc)}'
+
+def remove_action_cues(text):
+    """Remove action cues in asterisks from AI responses"""
+    import re
+    # Remove *text* patterns while preserving the rest
+    text = re.sub(r'\*[^*]*\*', '', text)
+    # Clean up extra whitespace
+    text = ' '.join(text.split())
+    return text
 
 
 
@@ -1524,6 +1543,7 @@ def interrogate():
             'answer': answer,
             'mode': strategy,
             'history': suspect['history'],
+            'suspects': get_suspect_summary(game),
             'tension_scores': get_tension_summary(game),
             'time_remaining': game['time_remaining'],
             'message': 'The clock has run out. The investigation has ended.',
@@ -1536,12 +1556,7 @@ def interrogate():
         'answer': answer,
         'mode': strategy,
         'history': suspect['history'],
-        'suspect': {
-            'id': suspect_id,
-            'score': suspect['score'],
-            'mood': suspect['mood'],
-            'mood_icon': suspect['mood_icon'],
-        },
+        'suspects': get_suspect_summary(game),
         'tension_scores': get_tension_summary(game),
         'time_remaining': game['time_remaining'],
         'reason': reasons,

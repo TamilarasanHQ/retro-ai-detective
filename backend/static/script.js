@@ -121,14 +121,14 @@ function renderMeters(scores) {
 }
 
 function parseActionCues(text) {
-  // Convert *text* to <span class="action-cue">*text*</span>
-  return text.replace(/\*(.*?)\*/g, '<span class="action-cue">*$1*</span>');
+  // Action cues are no longer used
+  return text;
 }
 
 function appendLine(text, type = 'line-system') {
   const line = document.createElement('div');
   line.className = `terminal-line ${type}`;
-  const formattedText = type === 'line-ai' ? parseActionCues(text) : text;
+  const formattedText = text;
   line.innerHTML = `<span class="label">${type === 'line-player' ? 'You ask' : type === 'line-ai' ? 'Answer' : 'System'}</span><span>${formattedText}</span>`;
   terminalOutput.appendChild(line);
   terminalOutput.scrollTop = terminalOutput.scrollHeight;
