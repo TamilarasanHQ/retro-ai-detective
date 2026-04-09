@@ -11,6 +11,7 @@ CORS(app)
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '').strip()
 OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 TIME_LIMIT_HOURS = 48
+ANTI_GRAVITY_MODE = True
 
 SUSPECT_PROFILES = {
     'A': {
@@ -1073,6 +1074,11 @@ def evaluate_intent_and_strategy(suspect, question, game):
         
     stress_level = get_stress_level(suspect['score'])
     
+    if suspect['role'] == 'innocent' and stress_level == 'Extreme' and random.random() < 0.3:
+        strategy = 'False Confession'
+        base_answer = "Fine! I did it! Are you happy now? Just stop the questions... I can't take it anymore. *sobs* But I don't remember how I did it... everything is floating..."
+        return intent, strategy, base_answer
+
     if suspect['role'] == 'killer':
         if intent == 'Evidence':
             if stress_level in ['High', 'Extreme']:
@@ -1182,36 +1188,62 @@ def get_mood(score):
     return 'low stress', '😌'
 
 
+def apply_gravity_drift(suspect):
+    if ANTI_GRAVITY_MODE and random.random() < 0.2:
+        drift_options = [
+            suspect['base_alibi'].replace('Study', 'Library').replace('Office', 'Conference Room'),
+            suspect['base_alibi'] + " ...or was it earlier? I lose track.",
+            suspect['base_alibi'] + " ...wait, the gravity shifted then."
+        ]
+        suspect['alibi'] = random.choice(drift_options)
+
 def evaluate_question_effect(game, suspect_id, question):
     question_lower = question.lower()
     delta = 0
     reasons = []
 
+    # Base increment for any question (pressure builds on everyone)
+    delta += 5
+
+    # Accusation keywords affect everyone strongly
     if any(keyword in question_lower for keyword in ACCUSATION_KEYWORDS):
-        delta += 25
+        delta += 20
         reasons.append('direct accusation')
 
+    # Contradiction keywords
     if any(keyword in question_lower for keyword in CONTRADICTION_KEYWORDS):
-        delta += 15
+        delta += 10
         reasons.append('contradiction')
 
+    # Aggressive tone
     if any(keyword in question_lower for keyword in AGGRESSIVE_KEYWORDS):
-        delta += 10
+        delta += 8
         reasons.append('aggressive tone')
 
-    if any(keyword in question_lower for keyword in CALMING_KEYWORDS):
-        delta -= 5
-        reasons.append('calming approach')
+    suspect = game['suspects'][suspect_id]
 
+    # Calming approach reduces tension for everyone (but killer resists more)
+    if any(keyword in question_lower for keyword in CALMING_KEYWORDS):
+        if suspect['role'] == 'killer':
+            delta -= 2  # barely calms down
+        else:
+            delta -= 8
+
+    # Repeated questions increase tension for killer more, but still affect innocents
     history = game['question_history'].get(suspect_id, [])
     if question_lower in history:
-        delta += 5
+        if suspect['role'] == 'killer':
+            delta += 12
+        else:
+            delta += 5
         reasons.append('repeated question')
 
     history.append(question_lower)
     game['question_history'][suspect_id] = history
 
-    delta += random.randint(-2, 2)
+    # Random noise makes meter less predictable
+    delta += random.randint(-4, 6)
+
     return delta, reasons
 
 
@@ -1290,51 +1322,62 @@ def format_prompt(suspect, question, game, intent, strategy, base_answer, stress
     case = game.get('case', {})
     evidence_str = "\n".join(f"- {ev}" for ev in case.get('key_evidence', []))
     
-    # Phase 7 Adaptation marker:
-    adaptation_note = ""
-    if len(game['question_history'].get(suspect['id'], [])) > 6:
-        adaptation_note = "The detective has been questioning you relentlessly. Show growing exhaustion or irritation."
+    anti_gravity_context = ""
+    if ANTI_GRAVITY_MODE:
+        anti_gravity_context = """
+# ANTI-GRAVITY INTERROGATION PROTOCOL
+You are being questioned in a zero-gravity environment. Your thoughts drift, memories float unanchored.
+- Your answers may momentarily contradict themselves as if your mind is weightless.
+- You might recall a detail you previously forgot, or forget something you just said.
+- Your emotional state is untethered: calm one second, agitated the next.
+- You sometimes speak in fragments, as if pulling words from a floating cloud.
+- The detective's questions seem to come from all directions; you may lose track of time.
+This is not a malfunction-it is the new reality of the interrogation. Embrace the drift.
+"""
+
+    tells = profile.get('tells', ['touches face', 'voice wavers', 'blinks rapidly', 'shifts weight'])
 
     system_content = f"""You are an advanced game design engine roleplaying as {profile['name']} ({profile['alias']}), a suspect in a detective game.
+{anti_gravity_context}
 
-# Phase 1: Core Identity
+# Core Identity
 Role: {suspect['role'].upper()} (Keep this secret unless extreme pressure forces a confession)
 Hidden Secret: {profile.get('hidden_secrets', '')}
 Truthfulness Baseline: {profile.get('truthfulness_baseline', '100')}%
 
-# Phase 2: Personality Engine
+# Personality & Tells
 Archetype: {profile.get('archetype', 'Neutral')}
 Behavior Traits: {profile['personality']}
+Tells when stressed: {', '.join(tells)}
 
-# Phase 4: Stress & Tension Rules
+# Stress & Tension
 Current Stress Level: {stress_level}
-- Low (Controlled, clean answers. Very consistent.)
-- Medium (Hesitation, minor slips, slightly defensive. Use filler words like '...uh' or 'well...')
-- High (Contradictions may appear, emotional reactions. Becoming hostile or very erratic)
-- Extreme (Refusal, breakdown, or accidental truth reveal. Panic.)
+- Low: Controlled but with subtle drift.
+- Medium: Hesitation, minor slips, phrases may hang unfinished.
+- High: Contradictions appear, emotional whiplash, may start a sentence and end it differently.
+- Extreme: Refusal, breakdown, or accidental truth fragments floating to surface.
 
-# Phase 3 & 5: Strategy & Memory
-Player Question Intent: {intent}
-Your Chosen Core Strategy: {strategy}
-Core Base Answer to Build Upon (Do not just Output this, flesh it out): "{base_answer}"
+# Strategy & Memory
+Player Intent: {intent}
+Core Strategy: {strategy}
+Base Answer: "{base_answer}"
 
-Past Conversation Memory:
+Past Conversation (may be hazy):
 {history_str}
 {adaptation_note}
 
-# Phase 6 & 8 & 10: Guidance & Immersion
-Case Evidence (React dynamically if the player mentions these):
+Case Evidence (if mentioned, react with appropriate gravity distortion):
 {evidence_str}
 
 CRITICAL DIRECTIVES:
-1. NEVER break character. You ARE the suspect.
-2. Keep answers highly focused and relevant. NO rambling.
-3. If your Strategy is 'Slip Up Contradiction', ensure your response directly contradicts one of your past answers slightly.
-4. NEVER narrate your internal thoughts or inner monologues. DO NOT use physical cues or asterisks (like *sweats*). ONLY output your direct spoken dialogue.
+1. NEVER break character. You ARE the suspect in zero-G.
+2. Use *action cues* in asterisks to show physical drifting, e.g., *floats slightly to the left*, *rubs temples as if disoriented*.
+3. Keep answers concise but allow natural drift. It's okay to contradict a minor detail you mentioned earlier-blame it on the lack of gravity.
+4. If your Strategy is 'Slip Up Contradiction', make the contradiction feel like a floating thought that just escaped.
 """
     return [
         {'role': 'system', 'content': system_content},
-        {'role': 'user', 'content': f"Detective asks: {question}"}
+        {'role': 'user', 'content': f"Detective asks (from somewhere in the chamber): {question}"}
     ]
 
 def call_openrouter(messages):
@@ -1449,6 +1492,8 @@ def interrogate():
     suspect = game['suspects'].get(suspect_id)
     if not suspect:
         return jsonify({'error': 'Invalid suspect selected.'}), 400
+
+    apply_gravity_drift(suspect)
 
     if game['time_remaining'] <= 0:
         return jsonify({'error': 'Time has run out. The investigation is over.'}), 400

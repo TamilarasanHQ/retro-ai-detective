@@ -227,6 +227,13 @@ body {
   gap: 12px;
   padding: 25px;
   border-left: 4px solid var(--primary-purple);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0px); }
 }
 
 .terminal-line {
