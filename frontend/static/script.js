@@ -139,10 +139,16 @@ function renderMeters(scores) {
   });
 }
 
+function parseActionCues(text) {
+  // Convert *text* to <span class="action-cue">*text*</span>
+  return text.replace(/\*(.*?)\*/g, '<span class="action-cue">*$1*</span>');
+}
+
 function appendLine(text, type = 'line-system') {
   const line = document.createElement('div');
   line.className = `terminal-line ${type}`;
-  line.innerHTML = `<span class="label">${type === 'line-player' ? 'You ask' : type === 'line-ai' ? 'Answer' : 'System'}</span><span>${text}</span>`;
+  const formattedText = type === 'line-ai' ? parseActionCues(text) : text;
+  line.innerHTML = `<span class="label">${type === 'line-player' ? 'You ask' : type === 'line-ai' ? 'Answer' : 'System'}</span><span>${formattedText}</span>`;
   terminalOutput.appendChild(line);
   terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
@@ -188,9 +194,12 @@ async function accuseSuspect() {
     });
     const data = await response.json();
     if (response.ok) {
+      if (data.outcome_rank) {
+        appendSystemLine(`=== OUTCOME: ${data.outcome_rank.toUpperCase()} ===`);
+      }
       appendSystemLine(data.message);
       if (data.correct) appendSystemLine('Investigation complete. Restart to play again.');
-      else appendSystemLine('Keep questioning the other suspects.');
+      else appendSystemLine('Case closed in failure. Restart to try again.');
     } else {
       appendSystemLine(`Error: ${data.error || 'Unable to accuse.'}`);
     }

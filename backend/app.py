@@ -20,7 +20,10 @@ SUSPECT_PROFILES = {
         'age': 42,
         'relation': 'Widow of the victim',
         'motive': 'inheritance and family secrets',
-        'personality': 'calculated',
+        'personality': 'Calm: logical, precise, composed, keeps a careful distance, controlled tone, denies emotional involvement.',
+        'archetype': 'Calm',
+        'truthfulness_baseline': 80,
+        'hidden_secrets': 'She knew about her husband changing his will two days ago.',
         'bio': 'Victoria is poised, elegant, and keeps a careful distance from the scandal. She claims loyalty to the family legacy but her eyes never leave the ledger.',
         'alibi': 'I was in the study reviewing estate papers when the incident happened.',
         'real_location': 'Study',
@@ -34,7 +37,10 @@ SUSPECT_PROFILES = {
         'age': 39,
         'relation': 'Victim’s business partner',
         'motive': 'financial disputes and betrayal',
-        'personality': 'anxious',
+        'personality': 'Nervous: unstable, anxious, talks fast, sweats the details, over-explains, highly defensive under pressure, stutters.',
+        'archetype': 'Nervous',
+        'truthfulness_baseline': 60,
+        'hidden_secrets': 'He was embezzling company funds and the victim found out.',
         'bio': 'Marcus is restless and focused on the numbers. He says he was working late to protect the company, but the pressure of money makes him defensive.',
         'alibi': 'I was in my office handling a crisis call with an investor.',
         'real_location': 'Office',
@@ -48,7 +54,10 @@ SUSPECT_PROFILES = {
         'age': 29,
         'relation': 'Housekeeper and occasional confidante',
         'motive': 'heard too much, wants freedom',
-        'personality': 'observant',
+        'personality': 'Manipulative: observant, redirects questions, answers questions with questions, tries to cast doubt on others, selectively truthful.',
+        'archetype': 'Manipulative',
+        'truthfulness_baseline': 40,
+        'hidden_secrets': 'She was secretly gathering blackmail material on the victim to pay off her brother\'s debts.',
         'bio': 'Elena knows the estate better than most. She seems nervous but precise, and she heard conversations no one else did.',
         'alibi': 'I was tidying the east wing and then took a break in the servant quarters.',
         'real_location': 'Servant Quarters',
@@ -365,79 +374,79 @@ def get_emotion(game_id, suspect_id, suspect):
 
 
 
-def generate_logical_answer(suspect, question):
-    """Generate a logical answer based on truth/lie detection"""
+def get_stress_level(score):
+    """Phase 4 Stress Mechanics"""
+    if score >= 85: return 'Extreme'
+    if score >= 60: return 'High'
+    if score >= 40: return 'Medium'
+    return 'Low'
+
+def evaluate_intent_and_strategy(suspect, question, game):
+    """Phase 3: Determine intent and strategy"""
     question_lower = question.lower()
     
-    # Location questions
-    if any(word in question_lower for word in ['where', 'location', 'place', 'area']):
-        if suspect['role'] == 'killer':
-            # Killer lies 80% of time, slips 20%
-            if random.random() < 0.8:
-                base_answer = suspect['alibi']
-                mode = 'lying'
+    # Phase 6 & 3 Check: Evidence mentioned?
+    case = game.get('case', {})
+    evidence_words = []
+    for ev in case.get('key_evidence', []):
+        for word in ev.lower().split():
+            if len(word) > 4: evidence_words.append(word)
+    evidence_mentioned = any(word in question_lower for word in evidence_words)
+    
+    intent = 'General'
+    if evidence_mentioned:
+        intent = 'Evidence'
+    elif any(word in question_lower for word in ['where', 'location', 'place', 'alibi', 'when', 'time']):
+        intent = 'Alibi'
+    elif any(word in question_lower for word in ['why', 'motive', 'relation', 'know', 'feel']):
+        intent = 'Motive'
+        
+    stress_level = get_stress_level(suspect['score'])
+    
+    if suspect['role'] == 'killer':
+        if intent == 'Evidence':
+            if stress_level in ['High', 'Extreme']:
+                strategy = 'Panic and Deflect'
+                base_answer = "I don't know anything about that! Why are you asking me? Someone else must have put it there!"
             else:
-                # Small slip - might mention real location
-                base_answer = f"I was... well, mostly in the {suspect['real_location']}. I mean, {suspect['alibi'].lower()}"
-                mode = 'slip'
-        else:
-            base_answer = f"I was in the {suspect['real_location']}, {suspect['alibi'].lower()}"
-            mode = 'truth'
-    
-    # Time questions
-    elif any(word in question_lower for word in ['when', 'time', 'clock', 'hour']):
-        if suspect['role'] == 'killer':
-            base_answer = suspect['alibi']
-            mode = 'lying'
-        else:
-            base_answer = suspect['alibi']
-            mode = 'truth'
-    
-    # Alibi questions
-    elif any(word in question_lower for word in ['alibi', 'prove', 'witness', 'see']):
-        if suspect['role'] == 'killer':
-            if random.random() < 0.7:
-                base_answer = "I was alone. No one can confirm where I was."
-                mode = 'defensive'
+                strategy = 'Lie'
+                base_answer = "I've never seen that before in my life."
+        elif intent == 'Alibi':
+            if stress_level == 'Extreme':
+                strategy = 'Slip Up Contradiction'
+                base_answer = f"I was in the {suspect['real_location']}! I mean, I was exactly where I said I was!"
+            elif stress_level == 'High':
+                strategy = 'Defensive Lie'
+                base_answer = f"I already told you, I was {suspect['base_alibi']}. Are you calling me a liar?"
             else:
-                base_answer = "Look, I already told you where I was. Why don't you ask someone else?"
-                mode = 'deflecting'
-        else:
-            base_answer = f"I was where I said I was. You can check with others if you want."
-            mode = 'truth'
-    
-    # Suspicion/accusation questions
-    elif any(word in question_lower for word in ['suspect', 'think', 'who', 'killer', 'guilty']):
-        if suspect['role'] == 'killer':
-            if random.random() < 0.6:
-                base_answer = "I don't know who did it. Maybe look at the others."
-                mode = 'deflecting'
+                strategy = 'Lie'
+                base_answer = f"I was {suspect['base_alibi']} the entire time."
+        elif intent == 'Motive':
+            if stress_level in ['High', 'Extreme']:
+                strategy = 'Aggressive Denial'
+                base_answer = "I had nothing to do with them. We were fine, entirely fine!"
             else:
-                base_answer = "Why are you asking me? I've been nothing but cooperative."
-                mode = 'defensive'
+                strategy = 'Lie'
+                base_answer = "We were on good terms. I have no motive."
         else:
-            base_answer = "I don't know who the killer is, but I'm sure the evidence will point to them."
-            mode = 'truth'
-    
-    # Why questions (motive)
-    elif any(word in question_lower for word in ['why', 'motive', 'reason']):
-        if suspect['role'] == 'killer':
-            base_answer = "I had no reason to hurt anyone. This is ridiculous."
-            mode = 'lying'
+            strategy = 'Deflection'
+            base_answer = "I had nothing to do with this. You should look at the others."
+    else: # Innocent
+        if intent == 'Evidence':
+            if stress_level in ['High', 'Extreme']:
+                strategy = 'Anxious Clarification'
+                base_answer = "I don't know what that means! Please, I had nothing to do with it!"
+            else:
+                strategy = 'Truth'
+                base_answer = "I really don't recognize that piece of evidence."
+        elif intent == 'Alibi':
+            strategy = 'Truth'
+            base_answer = f"I was {suspect['base_alibi']}. That's the truth."
         else:
-            base_answer = "I barely knew the victim. I have no reason to be involved."
-            mode = 'truth'
-    
-    # Default response
-    else:
-        if suspect['role'] == 'killer':
-            base_answer = suspect['alibi']
-            mode = 'lying'
-        else:
-            base_answer = suspect['alibi']
-            mode = 'truth'
-    
-    return base_answer, mode
+            strategy = 'Truth'
+            base_answer = "I'm telling you everything I know."
+            
+    return intent, strategy, base_answer
 
 def format_history(history):
     """Format conversation history for the prompt"""
@@ -446,8 +455,7 @@ def format_history(history):
     
     formatted = []
     for i, entry in enumerate(history, 1):
-        formatted.append(f"Q{i}: {entry['question']}")
-        formatted.append(f"A{i}: {entry['answer']}")
+        formatted.append(f"Q{i}: {entry['question']}\nA{i}: {entry['answer']}")
     
     return "\n".join(formatted)
 
@@ -498,15 +506,10 @@ CALMING_KEYWORDS = [
 ]
 
 def get_mood(score):
-    if score >= 100:
-        return 'refusing', '🚫'
-    if score >= 81:
-        return 'angry', '😠'
-    if score >= 61:
-        return 'nervous', '😰'
-    if score >= 40:
-        return 'defensive', '😤'
-    return 'relaxed', '😌'
+    if score >= 85: return 'extreme stress', '🚫'
+    if score >= 60: return 'high stress', '😠'
+    if score >= 40: return 'medium stress', '😰'
+    return 'low stress', '😌'
 
 
 def evaluate_question_effect(game, suspect_id, question):
@@ -591,51 +594,63 @@ def make_game():
     return game
 
 
-def format_prompt(suspect, question, game_id, base_answer, mode, emotion):
-    """Create enhanced prompt with logical answer base and memory"""
+def format_prompt(suspect, question, game, intent, strategy, base_answer, stress_level):
+    """Phase 8 & 10: Player guidance and immersion prompt formatting"""
     profile = SUSPECT_PROFILES[suspect['id']]
     
-    history = []
-    if game_id in conversation_memory and suspect['id'] in conversation_memory[game_id]:
-        history = conversation_memory[game_id][suspect['id']][-3:]
+    # Grab the last 6 interactions for accurate memory & contradiction checks
+    history_arr = suspect['history'][-6:] if 'history' in suspect else []
+    history_str = format_history(history_arr)
     
-    mood_text = {
-        'refusing': 'refusing to cooperate',
-        'angry': 'angry and hostile',
-        'nervous': 'nervous and easily rattled',
-        'defensive': 'defensive and guarded',
-        'relaxed': 'relaxed and talkative',
-    }.get(emotion, emotion)
+    case = game.get('case', {})
+    evidence_str = "\n".join(f"- {ev}" for ev in case.get('key_evidence', []))
+    
+    # Phase 7 Adaptation marker:
+    adaptation_note = ""
+    if len(game['question_history'].get(suspect['id'], [])) > 6:
+        adaptation_note = "The detective has been questioning you relentlessly. Show growing exhaustion or irritation."
 
-    system_content = f"""You are {profile['name']} ({profile['alias']}), a suspect in a murder investigation.
+    system_content = f"""You are an advanced game design engine roleplaying as {profile['name']} ({profile['alias']}), a suspect in a detective game.
 
-Personality: {profile['personality']}
-Current emotional state: {mood_text}
-Your role: {suspect['role']} (keep this secret)
-Truth/Lie mode: {mode}
+# Phase 1: Core Identity
+Role: {suspect['role'].upper()} (Keep this secret unless extreme pressure forces a confession)
+Hidden Secret: {profile.get('hidden_secrets', '')}
+Truthfulness Baseline: {profile.get('truthfulness_baseline', '100')}%
 
-CRITICAL RULES:
-- Do NOT repeat the exact same sentence structure
-- Speak naturally like a real human
-- Vary your phrasing each time you're asked similar questions
-- Keep answers concise if tension is high, more descriptive if relaxed
-- Stay in character as {profile['name']}, the {profile['title']}
-- Your core response should be based on: "{base_answer}"
-- Add natural human variations, hesitations, or filler words
-- Never break character or acknowledge you're an AI
+# Phase 2: Personality Engine
+Archetype: {profile.get('archetype', 'Neutral')}
+Behavior Traits: {profile['personality']}
 
-Previous responses (DO NOT repeat these exactly):
-{format_history(history)}
+# Phase 4: Stress & Tension Rules
+Current Stress Level: {stress_level}
+- Low (Controlled, clean answers. Very consistent.)
+- Medium (Hesitation, minor slips, slightly defensive. Use filler words like '...uh' or 'well...')
+- High (Contradictions may appear, emotional reactions. Becoming hostile or very erratic)
+- Extreme (Refusal, breakdown, or accidental truth reveal. Panic.)
 
-Convert the following core response into natural, varied human speech:
-"{base_answer}"
+# Phase 3 & 5: Strategy & Memory
+Player Question Intent: {intent}
+Your Chosen Core Strategy: {strategy}
+Core Base Answer to Build Upon (Do not just Output this, flesh it out): "{base_answer}"
+
+Past Conversation Memory:
+{history_str}
+{adaptation_note}
+
+# Phase 6 & 8 & 10: Guidance & Immersion
+Case Evidence (React dynamically if the player mentions these):
+{evidence_str}
+
+CRITICAL DIRECTIVES:
+1. NEVER break character. You ARE the suspect.
+2. Tone Shifts: You MUST use markdown italics for behavioral cues, e.g., *crosses arms defensively*, *sweats*, *looks away avoiding eye contact*. Use heavily if stressed! Let this be part of your response.
+3. Keep answers highly focused and relevant. NO rambling.
+4. If your Strategy is 'Slip Up Contradiction', ensure your response directly contradicts one of your past answers slightly.
 """
-    
     return [
         {'role': 'system', 'content': system_content},
-        {'role': 'user', 'content': question}
+        {'role': 'user', 'content': f"Detective asks: {question}"}
     ]
-
 
 def call_openrouter(messages):
     if not OPENROUTER_API_KEY:
@@ -753,18 +768,19 @@ def interrogate():
     if game['time_remaining'] <= 0:
         return jsonify({'error': 'Time has run out. The investigation is over.'}), 400
     
-    base_answer, mode = generate_logical_answer(suspect, question)
-    emotion = get_emotion(game_id, suspect_id, suspect)
-    prompt = format_prompt(suspect, question, game_id, base_answer, mode, emotion)
+    intent, strategy, base_answer = evaluate_intent_and_strategy(suspect, question, game)
+    stress_level = get_stress_level(suspect['score'])
+    
+    prompt = format_prompt(suspect, question, game, intent, strategy, base_answer, stress_level)
     answer = call_openrouter(prompt)
-    store_answer(game_id, suspect_id, question, answer, mode)
+    store_answer(game_id, suspect_id, question, answer, strategy)
 
     tension_change, reasons, hours_spent, mood = update_tension(game, suspect_id, question)
     
     entry = {
         'question': question,
         'answer': answer,
-        'mode': mode,
+        'mode': strategy,
         'tension_change': tension_change,
         'reason': reasons,
         'hours_spent': hours_spent,
@@ -776,7 +792,7 @@ def interrogate():
             'game_id': game_id,
             'suspect_id': suspect_id,
             'answer': answer,
-            'mode': mode,
+            'mode': strategy,
             'history': suspect['history'],
             'tension_scores': get_tension_summary(game),
             'time_remaining': game['time_remaining'],
@@ -788,7 +804,7 @@ def interrogate():
         'game_id': game_id,
         'suspect_id': suspect_id,
         'answer': answer,
-        'mode': mode,
+        'mode': strategy,
         'history': suspect['history'],
         'suspect': {
             'id': suspect_id,
@@ -814,19 +830,44 @@ def accuse():
         return jsonify({'error': 'Game not found. Call /start to begin.'}), 404
     if suspect_id not in game['suspects']:
         return jsonify({'error': 'Invalid suspect selected.'}), 400
+    
     correct = suspect_id == game['killer_id']
-    message = (
-        'Correct! Your detective instincts were right. The killer has been unmasked.'
-        if correct
-        else 'Wrong suspect. The killer is still at large. Try another interrogation.'
-    )
+    
+    # Phase 9: Multiple Outcomes Calculation
+    q_asked = game['questions_asked']
+    tensions = [v['score'] for v in game['suspects'].values()]
+    avg_tension = sum(tensions) / len(tensions) if tensions else 0
+    killer_tension = game['suspects'][game['killer_id']]['score']
+    
+    outcome_rank = "Inconclusive"
+    message = ""
+    if correct:
+        if q_asked < 3:
+            outcome_rank = "Lucky Guess"
+            message = "Correct! But with so few questions asked, they're calling it a lucky guess down at the precinct. The DA might struggle to convict."
+        elif killer_tension > 70:
+            outcome_rank = "Master Detective"
+            message = "Brilliant! You applied the perfect amount of pressure and unmasked the killer beautifully. An airtight case!"
+        else:
+            outcome_rank = "Solid Case"
+            message = "Correct! Your detective instincts were right. The killer has been unmasked and justice is served."
+    else:
+        if q_asked > 15:
+            outcome_rank = "Embarrassing Failure"
+            message = "Wrong suspect! Despite hours of interrogation, you let the real killer slip away while harassing an innocent."
+        else:
+            outcome_rank = "False Accusation"
+            message = "Wrong suspect. You jumped the gun. The real killer is still at large. Case closed in failure."
+            
     return jsonify(
         {
             'game_id': game_id,
             'accused': suspect_id,
             'correct': correct,
+            'outcome_rank': outcome_rank,
             'killer_id': game['killer_id'] if correct else None,
             'message': message,
+            'questions_asked': q_asked
         }
     )
 

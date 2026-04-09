@@ -352,6 +352,12 @@ body {
 .line-ai { color: #abff8f; }
 .line-system { color: var(--muted); }
 
+.action-cue {
+  font-style: italic;
+  color: #ffb86c;
+  opacity: 0.9;
+}
+
 .meters {
   display: grid;
   gap: 10px;
