@@ -643,9 +643,9 @@ Case Evidence (React dynamically if the player mentions these):
 
 CRITICAL DIRECTIVES:
 1. NEVER break character. You ARE the suspect.
-2. Tone Shifts: You MUST use markdown italics for behavioral cues, e.g., *crosses arms defensively*, *sweats*, *looks away avoiding eye contact*. Use heavily if stressed! Let this be part of your response.
-3. Keep answers highly focused and relevant. NO rambling.
-4. If your Strategy is 'Slip Up Contradiction', ensure your response directly contradicts one of your past answers slightly.
+2. Keep answers highly focused and relevant. NO rambling.
+3. If your Strategy is 'Slip Up Contradiction', ensure your response directly contradicts one of your past answers slightly.
+4. NEVER narrate your internal thoughts or inner monologues. DO NOT use physical cues or asterisks (like *sweats*). ONLY output your direct spoken dialogue.
 """
     return [
         {'role': 'system', 'content': system_content},
@@ -815,7 +815,7 @@ def interrogate():
         'tension_scores': get_tension_summary(game),
         'time_remaining': game['time_remaining'],
         'reason': reasons,
-        'message': f'Suspect answered. Tension changed by {tension_change:+d}, time -{hours_spent}h.',
+        'message': '',
     })
 
 @app.route('/accuse', methods=['POST'])
@@ -889,7 +889,7 @@ def status():
 
 @app.route('/')
 def serve_index():
-    return send_from_directory('static', 'index.html')
+    return send_from_directory('../frontend/static', 'index.html')
 
 @app.route('/case/<game_id>', methods=['GET'])
 def get_case_details(game_id):
@@ -899,7 +899,6 @@ def get_case_details(game_id):
         return jsonify({'error': 'Game not found.'}), 404
     
     case_data = game.get('case', {})
-    # Remove any internal fields we don't want to expose
     safe_case = {
         'id': case_data.get('id'),
         'title': case_data.get('title'),
@@ -909,13 +908,12 @@ def get_case_details(game_id):
         'key_evidence': case_data.get('key_evidence'),
         'case_summary': case_data.get('case_summary'),
         'connections': case_data.get('connections', {})
-        # Connections are shown in suspect bios, not here
     }
     return jsonify({'case': safe_case})
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory('static', path)
+    return send_from_directory('../frontend/static', path)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))

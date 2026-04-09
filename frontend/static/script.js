@@ -25,7 +25,10 @@ async function startGame() {
       gameId = data.game_id;
       activeSuspect = 'A';
       updateSuspectSelection();
-      renderMeters(data.tension_scores);  // Changed from suspicion_scores
+      renderMeters(data.tension_scores);
+      if (data.time_remaining !== undefined) {
+        document.getElementById('time-remaining-val').textContent = data.time_remaining;
+      }
       appendSystemLine(data.message);
       appendSystemLine('Choose a suspect and ask a question.');
       terminalOutput.scrollTop = terminalOutput.scrollHeight;
@@ -77,7 +80,7 @@ function renderMeters(scores) {
 
 function parseActionCues(text) {
   if (!text) return '';
-  return text.replace(/\*(.*?)\*/g, '<span class="action-cue">*$1*</span>');
+  return text.replace(/\*(.*?)\*/g, '').trim();
 }
 
 function appendLine(text, type = 'line-system') {
@@ -113,8 +116,9 @@ async function interrogate(event) {
         renderMeters(data.tension_scores);
       }
       if (data.time_remaining !== undefined) {
-        appendSystemLine(`⏰ Time remaining: ${data.time_remaining}h | ${data.message}`);
-      } else {
+        document.getElementById('time-remaining-val').textContent = data.time_remaining;
+      }
+      if (data.message) {
         appendSystemLine(data.message);
       }
       if (data.game_over) {
