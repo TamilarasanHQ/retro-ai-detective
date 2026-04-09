@@ -222,6 +222,104 @@ body {
   text-align: center;
 }
 
+/* CASE PANEL */
+.case-panel {
+  background: var(--panel);
+  border: 1px solid rgba(138, 255, 117, 0.18);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.case-header,
+.case-evidence-header,
+.profile-header,
+.meter-row {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.case-content {
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.case-title {
+  margin: 0 0 8px 0;
+  font-weight: bold;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.case-detail {
+  margin: 6px 0;
+  color: var(--text);
+}
+
+.case-description {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 2px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 8px;
+  padding: 10px 0;
+  font-size: 0.85rem;
+}
+
+.evidence-item {
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+/* SUSPECT PROFILE PANEL */
+.suspect-profile-panel {
+  background: var(--panel);
+  border: 1px solid rgba(138, 255, 117, 0.18);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.profile-content {
+  font-size: 0.9rem;
+}
+
+.suspect-name {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.suspect-detail {
+  margin: 6px 0;
+  color: var(--text);
+}
+
+.mood-display {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(96, 255, 158, 0.3);
+  border-radius: 4px;
+  font-weight: bold;
+}
+
 @media (max-width: 720px) {
   .terminal-shell { margin: 12px; padding: 14px; }
   .quick-buttons { flex-direction: column; }

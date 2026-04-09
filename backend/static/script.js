@@ -2,6 +2,7 @@ const BACKEND_URL = '';
 
 let gameId = null;
 let activeSuspect = 'A';
+let gameData = null;
 
 const terminalOutput = document.getElementById('terminal-output');
 const questionInput = document.getElementById('question-input');
@@ -15,6 +16,42 @@ const restartButton = document.getElementById('restart-button');
 const accuseButton = document.getElementById('accuse-button');
 const questionForm = document.getElementById('question-form');
 
+function displayCaseFile(caseData) {
+  if (!caseData) return;
+  
+  document.getElementById('case-title').textContent = caseData.title || 'Case File';
+  document.getElementById('victim-name').textContent = caseData.victim || 'Unknown';
+  document.getElementById('location-name').textContent = caseData.crime_scene || 'Unknown Location';
+  document.getElementById('case-description').textContent = caseData.case_summary || '';
+  
+  const evidenceList = document.getElementById('evidence-list');
+  evidenceList.innerHTML = '';
+  
+  const evidence = caseData.key_evidence || [];
+  if (Array.isArray(evidence)) {
+    evidence.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'evidence-item';
+      div.textContent = '🔗 ' + item;
+      evidenceList.appendChild(div);
+    });
+  }
+}
+
+function displaySuspectProfile(suspect) {
+  if (!suspect) return;
+  
+  document.getElementById('suspect-name').textContent = suspect.name || 'Unknown';
+  document.getElementById('alias-text').textContent = suspect.alias || 'N/A';
+  document.getElementById('title-text').textContent = suspect.title || 'N/A';
+  document.getElementById('bio-text').textContent = suspect.bio || 'No information available';
+  
+  const moodDisplay = document.getElementById('suspect-mood-display');
+  const mood = suspect.mood || 'Unknown';
+  const moodIcon = suspect.mood_icon || '❓';
+  moodDisplay.innerHTML = `<div>${moodIcon} <strong>Current Mood:</strong> ${mood}</div><div>📊 <strong>Tension Level:</strong> ${suspect.score}%</div>`;
+}
+
 async function startGame() {
   appendSystemLine('Initializing new investigation...');
   try {
@@ -22,7 +59,22 @@ async function startGame() {
     const data = await response.json();
     if (response.ok) {
       gameId = data.game_id;
+      gameData = data;
       activeSuspect = 'A';
+      
+      // Display case file
+      displayCaseFile(data.case);
+      
+      // Display initial suspect profile
+      const suspects = data.suspects || [];
+      const suspectMap = {};
+      suspects.forEach(s => {
+        suspectMap[s.id] = s;
+      });
+      if (suspectMap['A']) {
+        displaySuspectProfile(suspectMap['A']);
+      }
+      
       updateSuspectSelection();
       renderMeters(data.suspicion_scores);
       appendSystemLine(data.message);
@@ -46,6 +98,15 @@ function updateSuspectSelection() {
 function selectSuspect(suspectId) {
   activeSuspect = suspectId;
   updateSuspectSelection();
+  
+  // Update profile display
+  if (gameData && gameData.suspects) {
+    const suspect = gameData.suspects.find(s => s.id === suspectId);
+    if (suspect) {
+      displaySuspectProfile(suspect);
+    }
+  }
+  
   appendSystemLine(`Selected suspect ${suspectId}.`);
 }
 
@@ -94,6 +155,16 @@ async function interrogate(event) {
     if (response.ok) {
       appendLine(data.answer, 'line-ai');
       renderMeters(data.suspicion_scores);
+      
+      // Update gameData with new suspect info
+      if (data.suspects) {
+        gameData.suspects = data.suspects;
+        const activeSuspectData = data.suspects.find(s => s.id === activeSuspect);
+        if (activeSuspectData) {
+          displaySuspectProfile(activeSuspectData);
+        }
+      }
+      
       appendSystemLine(data.message);
     } else {
       appendSystemLine(`Error: ${data.error || 'Unable to interrogate.'}`);
