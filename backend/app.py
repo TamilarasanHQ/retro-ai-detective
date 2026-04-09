@@ -64,6 +64,295 @@ SUSPECT_PROFILES = {
         'icon': '🧹',
         'base_alibi': 'Servant quarters - taking a break'
     },
+    'D': {
+        'name': 'Dr. Samuel Reed',
+        'alias': 'The Doctor',
+        'title': 'Family Physician',
+        'age': 56,
+        'relation': 'Victim\'s personal doctor',
+        'motive': 'medical malpractice cover-up',
+        'personality': 'Evasive: speaks in medical jargon, deflects with professional authority, vague about specifics, often says "I can\'t discuss patient confidentiality."',
+        'archetype': 'Evasive',
+        'truthfulness_baseline': 50,
+        'hidden_secrets': 'He prescribed the victim a dangerous combination of medications that could have caused erratic behavior.',
+        'bio': 'Dr. Reed has been the family doctor for decades. He seems concerned but is careful with his words, hiding behind his Hippocratic oath.',
+        'alibi': 'I was at the clinic catching up on patient files. I left around 9 PM.',
+        'real_location': 'Medical Clinic',
+        'icon': '🩺',
+        'base_alibi': 'Clinic - reviewing patient files'
+    },
+    'E': {
+        'name': 'Lena Petrova',
+        'alias': 'The Journalist',
+        'title': 'Investigative Reporter',
+        'age': 34,
+        'relation': 'Was writing an exposé on the victim',
+        'motive': 'career-making story, source protection',
+        'personality': 'Inquisitive: asks more questions than she answers, notes everything, seems to know more than she lets on, protective of her sources.',
+        'archetype': 'Inquisitive',
+        'truthfulness_baseline': 70,
+        'hidden_secrets': 'She received an anonymous tip about the victim\'s illegal activities the night before the murder.',
+        'bio': 'Lena is sharp and observant. She was seen near the crime scene but claims it was for her investigation. Her notebook is filled with cryptic shorthand.',
+        'alibi': 'I was in my car outside the building, waiting for a source who never showed.',
+        'real_location': 'Car outside building',
+        'icon': '📸',
+        'base_alibi': 'Car - waiting for anonymous source'
+    },
+    'F': {
+        'name': 'Tomás Herrera',
+        'alias': 'The Gardener',
+        'title': 'Groundskeeper',
+        'age': 47,
+        'relation': 'Long-time estate employee',
+        'motive': 'loyalty to the family, possible blackmail',
+        'personality': 'Loyal but nervous: speaks highly of the family, avoids direct eye contact, fidgets with his cap, offers too much unsolicited praise.',
+        'archetype': 'Nervous',
+        'truthfulness_baseline': 65,
+        'hidden_secrets': 'He saw the victim arguing with someone near the greenhouse an hour before the murder.',
+        'bio': 'Tomás has worked the grounds for 20 years. He knows every corner of the estate and is fiercely protective of the family\'s reputation.',
+        'alibi': 'I was in the greenhouse preparing seedlings for the spring planting.',
+        'real_location': 'Greenhouse',
+        'icon': '🌿',
+        'base_alibi': 'Greenhouse - preparing seedlings'
+    },
+    'G': {
+        'name': 'Priya Sharma',
+        'alias': 'The Accountant',
+        'title': 'Financial Advisor',
+        'age': 41,
+        'relation': 'Managed victim\'s investments',
+        'motive': 'embezzlement discovery',
+        'personality': 'Calculating: speaks precisely, answers only what is asked, watches her words carefully, never volunteers extra information.',
+        'archetype': 'Calculating',
+        'truthfulness_baseline': 75,
+        'hidden_secrets': 'She discovered a large, unexplained transfer from the victim\'s account to an offshore entity two days ago.',
+        'bio': 'Priya is meticulous and keeps perfect records. She seems helpful but guards information like currency.',
+        'alibi': 'I was working late at my office downtown. I have security badge logs to prove it.',
+        'real_location': 'Downtown Office',
+        'icon': '📊',
+        'base_alibi': 'Office - working late on accounts'
+    },
+    'H': {
+        'name': 'Dimitri Volkov',
+        'alias': 'The Ex-Con',
+        'title': 'Former Employee',
+        'age': 38,
+        'relation': 'Recently fired by victim',
+        'motive': 'revenge, anger issues',
+        'personality': 'Volatile: quick to anger, easily frustrated by repeated questions, uses intimidation, but occasionally shows vulnerability.',
+        'archetype': 'Volatile',
+        'truthfulness_baseline': 45,
+        'hidden_secrets': 'He was seen arguing with the victim about unpaid wages the day of the murder.',
+        'bio': 'Dimitri has a short temper and a record. He was fired last week and hasn\'t taken it well. He was seen near the estate that night.',
+        'alibi': 'I was at a bar down the street. The bartender knows me.',
+        'real_location': 'Neighborhood Bar',
+        'icon': '🥃',
+        'base_alibi': 'Bar - drinking alone'
+    },
+    'I': {
+        'name': 'Yuki Tanaka',
+        'alias': 'The Artist',
+        'title': 'Commissioned Painter',
+        'age': 31,
+        'relation': 'Painting victim\'s portrait',
+        'motive': 'artistic obsession, secret affair',
+        'personality': 'Eccentric: speaks in metaphors, easily distracted by details, emotional, sometimes contradicts herself without realizing.',
+        'archetype': 'Eccentric',
+        'truthfulness_baseline': 55,
+        'hidden_secrets': 'She was having an affair with the victim and painted hidden messages in the portrait.',
+        'bio': 'Yuki sees the world in colors and emotions. She spent hours alone with the victim, capturing their likeness. Her studio is filled with half-finished canvases.',
+        'alibi': 'I was in my studio at the east end of the property, working on the underpainting.',
+        'real_location': 'Art Studio',
+        'icon': '🎨',
+        'base_alibi': 'Studio - working on portrait'
+    },
+    'J': {
+        'name': 'Robert Sterling III',
+        'alias': 'The Rival',
+        'title': 'Business Competitor',
+        'age': 49,
+        'relation': 'Arch-rival in industry',
+        'motive': 'corporate sabotage, personal grudge',
+        'personality': 'Arrogant: condescending, acts above suspicion, uses status to deflect, subtly insults the investigation process.',
+        'archetype': 'Arrogant',
+        'truthfulness_baseline': 60,
+        'hidden_secrets': 'He was secretly negotiating a buyout that the victim was blocking.',
+        'bio': 'Sterling sees this as an inconvenience. He believes his wealth and connections make him untouchable. He was in town for "business."',
+        'alibi': 'I was dining with clients at an exclusive club across town. The staff will vouch for me.',
+        'real_location': 'Exclusive Club',
+        'icon': '🎩',
+        'base_alibi': 'Private club - business dinner'
+    },
+    'K': {
+        'name': 'Sophie Martin',
+        'alias': 'The Ex-Wife',
+        'title': 'First Wife',
+        'age': 45,
+        'relation': 'Divorced from victim',
+        'motive': 'alimony dispute, jealousy',
+        'personality': 'Bitter: sarcastic, quick to point out victim\'s flaws, plays the victim card, emotional swings between anger and sadness.',
+        'archetype': 'Bitter',
+        'truthfulness_baseline': 70,
+        'hidden_secrets': 'She still had a key to the estate and was seen near the property that evening.',
+        'bio': 'Sophie feels she was wronged by the divorce settlement. She came by to "pick up some things" but may have had ulterior motives.',
+        'alibi': 'I was at my apartment, alone, watching old movies and drinking wine.',
+        'real_location': 'Her Apartment',
+        'icon': '🥀',
+        'base_alibi': 'Apartment - alone'
+    },
+    'L': {
+        'name': 'Omar Hassan',
+        'alias': 'The Security Guard',
+        'title': 'Night Watchman',
+        'age': 52,
+        'relation': 'On duty the night of murder',
+        'motive': 'negligence, possible inside job',
+        'personality': 'Anxious: eager to please, over-explains his rounds, nervous about losing his job, sweats under questioning.',
+        'archetype': 'Nervous',
+        'truthfulness_baseline': 50,
+        'hidden_secrets': 'He was asleep in the security booth for about an hour during his shift.',
+        'bio': 'Omar has worked security for 15 years without incident. He seems more worried about his pension than the murder.',
+        'alibi': 'I was making my rounds. I checked the east gate at 10 PM, then the main hall at 10:30.',
+        'real_location': 'Security Booth/Grounds',
+        'icon': '🔦',
+        'base_alibi': 'Security rounds - patrolling estate'
+    },
+    'M': {
+        'name': 'Maeve O\'Connell',
+        'alias': 'The Bartender',
+        'title': 'Local Pub Owner',
+        'age': 36,
+        'relation': 'Victim\'s favorite watering hole',
+        'motive': 'unpaid debts, overheard secrets',
+        'personality': 'Gossipy: friendly but sharp, knows everyone\'s business, remembers who drank what and when, deflects with charm.',
+        'archetype': 'Inquisitive',
+        'truthfulness_baseline': 75,
+        'hidden_secrets': 'The victim confided in her about a threatening letter two nights before.',
+        'bio': 'Maeve runs the corner pub. She sees everything and forgets nothing. Her alibi is shaky but her memory is sharp.',
+        'alibi': 'I was closing up the pub. I left around midnight and went straight home.',
+        'real_location': 'The Rusty Anchor Pub',
+        'icon': '🍺',
+        'base_alibi': 'Pub - closing shift'
+    },
+    'N': {
+        'name': 'Father Dominic',
+        'alias': 'The Priest',
+        'title': 'Parish Priest',
+        'age': 61,
+        'relation': 'Victim\'s spiritual advisor',
+        'motive': 'protecting confession seal, moral outrage',
+        'personality': 'Pious but troubled: speaks gently, chooses words carefully, seems burdened, refuses to break confidentiality.',
+        'archetype': 'Evasive',
+        'truthfulness_baseline': 85,
+        'hidden_secrets': 'The victim confessed something deeply troubling the afternoon of the murder.',
+        'bio': 'Father Dominic has served the parish for 30 years. He knows more than he can say, and his conscience is heavy.',
+        'alibi': 'I was in the rectory preparing my sermon for Sunday.',
+        'real_location': 'Church Rectory',
+        'icon': '⛪',
+        'base_alibi': 'Rectory - preparing sermon'
+    },
+    'O': {
+        'name': 'Jasmine Lee',
+        'alias': 'The Intern',
+        'title': 'Junior Assistant',
+        'age': 23,
+        'relation': 'Worked directly under victim',
+        'motive': 'overworked, undervalued, possible harassment',
+        'personality': 'Timid: speaks softly, avoids eye contact, flinches at loud voices, eager to please but easily overwhelmed.',
+        'archetype': 'Nervous',
+        'truthfulness_baseline': 70,
+        'hidden_secrets': 'She witnessed a heated argument between the victim and another suspect just hours before.',
+        'bio': 'Jasmine is new to the city and the job. She idolized the victim but also feared them. She\'s terrified of being blamed.',
+        'alibi': 'I was working late at my desk in the office annex. I was the last to leave.',
+        'real_location': 'Office Annex',
+        'icon': '📎',
+        'base_alibi': 'Office annex - working late'
+    },
+    'P': {
+        'name': 'Viktor Kozlov',
+        'alias': 'The Neighbor',
+        'title': 'Retired Military',
+        'age': 68,
+        'relation': 'Lived next door',
+        'motive': 'noise complaints, property disputes',
+        'personality': 'Suspicious: watches everything, keeps meticulous notes, distrusts authorities, answers in short, clipped sentences.',
+        'archetype': 'Calculating',
+        'truthfulness_baseline': 90,
+        'hidden_secrets': 'He has surveillance cameras that captured something unusual that night.',
+        'bio': 'Viktor is a creature of habit. He knows every car that parks on the street, every visitor, every unusual sound.',
+        'alibi': 'I was at home, watching my security monitors as I always do.',
+        'real_location': 'His Home',
+        'icon': '📷',
+        'base_alibi': 'Home - monitoring security feeds'
+    },
+    'Q': {
+        'name': 'Delilah Rose',
+        'alias': 'The Mistress',
+        'title': 'Secret Lover',
+        'age': 29,
+        'relation': 'Victim\'s extramarital partner',
+        'motive': 'jealousy, fear of exposure',
+        'personality': 'Emotional: cries easily, then turns cold, oscillates between love and hate for the victim, desperate to protect her secret.',
+        'archetype': 'Manipulative',
+        'truthfulness_baseline': 35,
+        'hidden_secrets': 'She was pregnant with the victim\'s child and threatened to tell his wife.',
+        'bio': 'Delilah lived in the shadows of the victim\'s life. She loved him, resented him, and now fears her world will collapse.',
+        'alibi': 'I was at home, alone, waiting for a call that never came.',
+        'real_location': 'Her Apartment',
+        'icon': '💋',
+        'base_alibi': 'Apartment - waiting by the phone'
+    },
+    'R': {
+        'name': 'Harold Finch',
+        'alias': 'The Butler',
+        'title': 'Head of Household Staff',
+        'age': 59,
+        'relation': 'Loyal servant for 35 years',
+        'motive': 'protecting family reputation at all costs',
+        'personality': 'Impeccable: formal, precise, never a hair out of place, answers with "Sir" or "Madam", reveals nothing.',
+        'archetype': 'Calm',
+        'truthfulness_baseline': 95,
+        'hidden_secrets': 'He cleaned up something incriminating before the police arrived.',
+        'bio': 'Harold has served the family longer than anyone. His loyalty is absolute. He would do anything to protect the household\'s name.',
+        'alibi': 'I was attending to my evening duties: locking up the silver, turning down beds, ensuring all was in order.',
+        'real_location': 'Main House',
+        'icon': '🎩',
+        'base_alibi': 'Estate - evening duties'
+    },
+    'S': {
+        'name': 'Nina Kowalski',
+        'alias': 'The Hacker',
+        'title': 'IT Security Consultant',
+        'age': 28,
+        'relation': 'Freelancer hired by victim',
+        'motive': 'discovered dirty data, blackmail opportunity',
+        'personality': 'Sarcastic: tech-savvy, impatient with non-tech people, uses jargon as a shield, acts superior but is deeply paranoid.',
+        'archetype': 'Calculating',
+        'truthfulness_baseline': 55,
+        'hidden_secrets': 'She found encrypted files on the victim\'s server detailing illegal transactions.',
+        'bio': 'Nina was brought in to upgrade security. She found more than she bargained for. Now she holds all the keys.',
+        'alibi': 'I was at my home office, logged into the network remotely. My logs will prove it.',
+        'real_location': 'Home Office',
+        'icon': '💻',
+        'base_alibi': 'Home - remote work'
+    },
+    'T': {
+        'name': 'Gabriel Santos',
+        'alias': 'The Valet',
+        'title': 'Personal Driver',
+        'age': 33,
+        'relation': 'Drove victim everywhere',
+        'motive': 'overheard damaging conversation, cut from will',
+        'personality': 'Observant but quiet: speaks only when spoken to, notices details about cars and routes, loyal to whoever pays him.',
+        'archetype': 'Evasive',
+        'truthfulness_baseline': 60,
+        'hidden_secrets': 'He drove the victim to a secret meeting the night of the murder and knows who they met.',
+        'bio': 'Gabriel spent more time with the victim than anyone. He knows schedules, routes, and secrets hidden in the backseat.',
+        'alibi': 'I was washing and detailing the car in the garage after dropping the victim off.',
+        'real_location': 'Garage',
+        'icon': '🚗',
+        'base_alibi': 'Garage - detailing vehicle'
+    }
 }
 
 # ============================================
@@ -325,7 +614,388 @@ CASE_FILES = [
         'No forced entry'
     ],
     'case_summary': 'Corporate tension reaches a breaking point.'
-},
+},    {
+        'id': 'mansion_murder',
+        'title': 'Murder at Blackwood Manor',
+        'difficulty': 'Hard',
+        'victim': {
+            'name': 'Lord Reginald Blackwood',
+            'age': 71,
+            'role': 'Eccentric Millionaire',
+            'background': 'Made his fortune in railroads, recently changed his will, and had strained relationships with all his heirs.'
+        },
+        'crime_scene': {
+            'location': 'Blackwood Manor - Library',
+            'time_of_death': 'Between 9:00 PM and 11:00 PM',
+            'weapon': 'Heavy crystal decanter (smashed)',
+            'description': '''
+                The body was found slumped over his antique mahogany desk.
+                A shattered crystal decanter lay nearby, with brandy soaking into the Persian rug.
+                The room was locked from the inside, but a hidden servant's passage was found ajar.
+                A torn piece of fabric was caught on the passage door handle.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was the victim\'s niece and stood to inherit the manor, but they had a public argument about selling the family estate.',
+            'B': 'Marcus Chen was the victim\'s financial advisor and knew about a recent bad investment that would have ruined the family.',
+            'C': 'Elena Reyes was a maid who recently discovered a hidden safe in the library and was caught snooping by the victim.'
+        },
+        'key_evidence': [
+            'Locked room with hidden passage ajar',
+            'Torn fabric on door handle',
+            'Shattered crystal decanter (murder weapon)',
+            'Burn marks in fireplace (documents destroyed)'
+        ],
+        'case_summary': '''
+            Lord Blackwood was found dead in his locked library. Only three people were in the manor at the time:
+            his niece Victoria, his advisor Marcus, and the maid Elena. Each has a motive, and the hidden passage
+            suggests someone knew the house's secrets well.
+        '''
+    },
+    {
+        'id': 'theater_murder',
+        'title': 'Final Curtain Call',
+        'difficulty': 'Medium',
+        'victim': {
+            'name': 'Adrian Sterling',
+            'age': 38,
+            'role': 'Lead Actor / Theater Owner',
+            'background': 'Charismatic but ruthless, he recently fired the understudy and was rumored to be selling the historic theater to developers.'
+        },
+        'crime_scene': {
+            'location': 'Grand Regal Theater - Backstage Dressing Room',
+            'time_of_death': 'Approximately 10:15 PM (during intermission)',
+            'weapon': 'Sandbag counterweight (fell from fly system)',
+            'description': '''
+                The victim was found on the floor of his dressing room, struck by a sandbag that had been tampered with.
+                The rope holding it was cleanly cut. The door was unlocked, and a bouquet of roses with a cryptic note
+                was found on his makeup table. The note read: "The show must not go on."
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was the lead actress and former lover of the victim; she was seen arguing with him about her contract earlier that day.',
+            'B': 'Marcus Chen was the theater\'s accountant who discovered financial discrepancies and was pressured to keep quiet.',
+            'C': 'Elena Reyes was the stage manager who had access to the fly system and was the last person seen leaving the backstage area before the incident.'
+        },
+        'key_evidence': [
+            'Cut rope (clean slice, premeditated)',
+            'Threatening note with bouquet',
+            'Financial records showing embezzlement',
+            'Witness saw someone on the catwalk during intermission'
+        ],
+        'case_summary': '''
+            During the sold-out performance, the lead actor was killed in his dressing room by a falling sandbag.
+            The theater is full of suspects with motives ranging from jealousy to money. Who wanted the final curtain
+            to fall on Adrian Sterling?
+        '''
+    },
+    {
+        'id': 'yacht_murder',
+        'title': 'Death on the High Seas',
+        'difficulty': 'Hard',
+        'victim': {
+            'name': 'Dominic Sterling',
+            'age': 52,
+            'role': 'Billionaire Tech Mogul',
+            'background': 'Founder of a social media empire, recently embroiled in a privacy scandal and a messy divorce.'
+        },
+        'crime_scene': {
+            'location': 'Luxury Yacht "Sea Serpent" - Master Cabin',
+            'time_of_death': 'Between 1:00 AM and 3:00 AM',
+            'weapon': 'Blunt object (missing ship\'s bell)',
+            'description': '''
+                The victim was found in his cabin, which was locked from the inside.
+                The porthole was open, and the ship's bell (a heavy bronze piece) was missing.
+                There were signs of a struggle, and a life preserver was thrown overboard.
+                GPS records show the yacht drifted off course for an hour that night.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was the victim\'s estranged wife, on board to discuss divorce terms; she would inherit half his fortune.',
+            'B': 'Marcus Chen was the yacht\'s captain, who was being blackmailed by the victim over a past smuggling conviction.',
+            'C': 'Elena Reyes was the stewardess who had been secretly copying the victim\'s financial data onto a USB drive.'
+        },
+        'key_evidence': [
+            'Missing ship\'s bell (presumed murder weapon)',
+            'Open porthole and thrown life preserver',
+            'Tampered GPS log (course altered)',
+            'USB drive with encrypted files found in stewardess quarters'
+        ],
+        'case_summary': '''
+            Miles from shore, billionaire Dominic Sterling was found dead in his locked cabin aboard his yacht.
+            Only three crew members/passengers were present. The isolated setting means the killer is still on board.
+        '''
+    },
+    {
+        'id': 'gallery_murder',
+        'title': 'The Poisoned Palette',
+        'difficulty': 'Easy',
+        'victim': {
+            'name': 'Isabelle Moreau',
+            'age': 34,
+            'role': 'Controversial Contemporary Artist',
+            'background': 'Known for provocative installations, she recently accused a rival of stealing her ideas and was about to unveil a shocking new piece.'
+        },
+        'crime_scene': {
+            'location': 'Avant-Garde Gallery - Installation Room',
+            'time_of_death': 'Around 8:00 PM (before opening)',
+            'weapon': 'Poison (cyanide in her wine glass)',
+            'description': '''
+                The victim collapsed near her latest installation, a cage filled with live birds.
+                A half-empty wine glass tested positive for cyanide.
+                The gallery's security system was off for "artistic ambiance."
+                A single white feather was found clutched in her hand.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was the gallery owner who stood to gain financially from the victim\'s death due to increased art value.',
+            'B': 'Marcus Chen was the victim\'s assistant who mixed her paints and prepared her drinks; he was often belittled publicly.',
+            'C': 'Elena Reyes was a rival artist whose work was "coincidentally" similar to the victim\'s new piece.'
+        },
+        'key_evidence': [
+            'Cyanide-laced wine glass',
+            'White feather in victim\'s hand',
+            'Security system turned off',
+            'Rival\'s paint samples match victim\'s new work'
+        ],
+        'case_summary': '''
+            The art world is shocked as rising star Isabelle Moreau is poisoned before her biggest show.
+            Three people were in the gallery that evening: the owner, the assistant, and a jealous rival.
+            The killer left a feather behind – but whose signature is it?
+        '''
+    },
+    {
+        'id': 'greenhouse_murder',
+        'title': 'Poison Ivy',
+        'difficulty': 'Medium',
+        'victim': {
+            'name': 'Harrison Green',
+            'age': 62,
+            'role': 'Award-Winning Botanist',
+            'background': 'Renowned for developing rare hybrids, he recently announced a breakthrough that could revolutionize agriculture, but rumors of corporate sabotage swirled.'
+        },
+        'crime_scene': {
+            'location': 'Private Greenhouse - Orchid House',
+            'time_of_death': 'Between 4:00 PM and 6:00 PM',
+            'weapon': 'Poison (plant toxin - curare)',
+            'description': '''
+                Found face-down among prized orchids, a small puncture wound on his neck.
+                A broken syringe was found nearby containing traces of curare.
+                A rare orchid (worth thousands) was missing from its pot.
+                Muddy footprints led to the back entrance.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was a competing botanist whose research was discredited by the victim; she desperately wanted his new hybrid formula.',
+            'B': 'Marcus Chen was the greenhouse manager who was secretly selling rare plants on the black market and was recently confronted by the victim.',
+            'C': 'Elena Reyes was an environmental activist who believed the victim\'s experiments were dangerous and had been protesting outside the property.'
+        },
+        'key_evidence': [
+            'Syringe with curare toxin',
+            'Missing rare orchid',
+            'Muddy footprints leading to back entrance',
+            'Protest pamphlets found near scene'
+        ],
+        'case_summary': '''
+            Botanist Harrison Green was killed in his own greenhouse by a potent plant toxin.
+            His death leaves a fortune in research and a garden of suspects. Who had the knowledge to use such a rare poison?
+        '''
+    },
+    {
+        'id': 'train_murder',
+        'title': 'Murder on the Midnight Express',
+        'difficulty': 'Hard',
+        'victim': {
+            'name': 'Archibald Finch',
+            'age': 68,
+            'role': 'Retired Judge',
+            'background': 'Known for harsh sentences, he was traveling with sensitive legal documents related to an old case. He had many enemies.'
+        },
+        'crime_scene': {
+            'location': 'Private Cabin on the Midnight Express Train',
+            'time_of_death': 'Approximately 2:00 AM',
+            'weapon': 'Stab wound (missing letter opener)',
+            'description': '''
+                The judge was found slumped in his seat, a single stab wound to the chest.
+                The door was locked with the chain on, but the window was open slightly.
+                His briefcase was open and important documents were scattered.
+                A conductor's cap was left on the floor.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was the judge\'s former clerk who was dismissed in disgrace; she was on the train "by coincidence."',
+            'B': 'Marcus Chen was a former defendant whose life was ruined by the judge\'s ruling; he had been released from prison just last month.',
+            'C': 'Elena Reyes was the train attendant assigned to that car; she had been seen arguing with the judge about an unpaid fare earlier.'
+        },
+        'key_evidence': [
+            'Locked room with open window',
+            'Missing letter opener (likely murder weapon)',
+            'Conductor\'s cap left behind',
+            'Scattered legal documents (old case files)'
+        ],
+        'case_summary': '''
+            On a moving train in the dead of night, a retired judge is murdered in his locked cabin.
+            The killer could be anyone on board, but three passengers have particularly strong motives.
+            The train will arrive at the station in two hours. Can you solve it before the killer disappears?
+        '''
+    },
+    {
+        'id': 'casino_murder',
+        'title': 'Ace of Spades',
+        'difficulty': 'Medium',
+        'victim': {
+            'name': 'Salvatore "Sal" Marchetti',
+            'age': 59,
+            'role': 'Casino Owner / Alleged Mobster',
+            'background': 'Owned the largest casino in the city, rumored to have ties to organized crime. Recently, a rival family made threats.'
+        },
+        'crime_scene': {
+            'location': 'Private Penthouse Suite above Casino',
+            'time_of_death': 'Between 11:00 PM and 1:00 AM',
+            'weapon': 'Single gunshot (silenced)',
+            'description': '''
+                Found sitting in his leather chair, a single gunshot to the chest.
+                An Ace of Spades playing card was placed on his chest.
+                The suite's security camera was looped with old footage.
+                A half-empty bottle of expensive whiskey and two glasses were on the table.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was the casino manager who was skimming profits and feared exposure; she was the last person seen leaving the suite.',
+            'B': 'Marcus Chen was a high-stakes gambler who owed the victim a massive debt and had his kneecaps threatened.',
+            'C': 'Elena Reyes was the cocktail waitress who delivered the whiskey; she had been seen talking to a known rival gang member earlier.'
+        },
+        'key_evidence': [
+            'Ace of Spades card (calling card)',
+            'Looped security footage',
+            'Two glasses (one with lipstick)',
+            'Silencer found in trash chute'
+        ],
+        'case_summary': '''
+            Casino owner Sal Marchetti was executed in his own penthouse. The Ace of Spades suggests a professional hit,
+            but was it an inside job? Three employees had reasons to want him dead, and the killer left a clue on purpose.
+        '''
+    },
+    {
+        'id': 'antique_shop_murder',
+        'title': 'The Cursed Antique',
+        'difficulty': 'Easy',
+        'victim': {
+            'name': 'Edgar Winthrop',
+            'age': 74,
+            'role': 'Antique Shop Owner',
+            'background': 'Known for acquiring mysterious artifacts, he recently bragged about obtaining a cursed Egyptian scarab. He was found dead hours later.'
+        },
+        'crime_scene': {
+            'location': 'Winthrop\'s Curiosities - Back Room',
+            'time_of_death': 'Around 9:00 PM (closing time)',
+            'weapon': 'Blunt force (heavy artifact)',
+            'description': '''
+                The victim was found behind the counter, struck from behind.
+                The display case for the Egyptian scarab was smashed and the artifact was missing.
+                A dusty footprint on the floor matched a rare vintage shoe.
+                The front door was locked, but the back alley door was ajar.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was a collector who desperately wanted the scarab and had a heated argument with the victim earlier that day.',
+            'B': 'Marcus Chen was a rival dealer who accused the victim of stealing the scarab from him years ago.',
+            'C': 'Elena Reyes was a cleaning lady who had just started working there; she claims to have seen a "shadowy figure" near the back door.'
+        },
+        'key_evidence': [
+            'Missing cursed scarab',
+            'Dusty vintage footprint',
+            'Smashed display case',
+            'Back door ajar'
+        ],
+        'case_summary': '''
+            Edgar Winthrop claimed he owned a cursed artifact. By nightfall, he was dead and the scarab was gone.
+            Was it a robbery gone wrong, or did someone believe in the curse enough to kill for it?
+        '''
+    },
+    {
+        'id': 'ski_lodge_murder',
+        'title': 'Avalanche of Lies',
+        'difficulty': 'Hard',
+        'victim': {
+            'name': 'Blake Sterling',
+            'age': 45,
+            'role': 'CEO of Outdoor Gear Company',
+            'background': 'Cutthroat businessman, recently laid off half the company and was vacationing with his executive team. An avalanche warning had trapped everyone at the lodge.'
+        },
+        'crime_scene': {
+            'location': 'Snowpeak Lodge - Hot Tub Deck',
+            'time_of_death': 'Between 10:00 PM and 11:00 PM',
+            'weapon': 'Electrocution (tampered outdoor wiring)',
+            'description': '''
+                The victim was found in the hot tub, unresponsive. Investigation revealed the outdoor lighting wire
+                had been deliberately stripped and dropped into the water. The fuse box was found unlocked.
+                The lodge was isolated due to heavy snow and an avalanche blocking the only road.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was the CFO who was about to be fired for objecting to the layoffs; she had access to the maintenance room.',
+            'B': 'Marcus Chen was the head of engineering who had been humiliated by the victim in a meeting; he knew exactly how to rig the wiring.',
+            'C': 'Elena Reyes was a junior employee who was having a secret affair with the victim and was seen arguing with him by the hot tub earlier.'
+        },
+        'key_evidence': [
+            'Tampered wiring (stripped deliberately)',
+            'Unlocked fuse box',
+            'Witness saw someone in a red jacket near the deck',
+            'Avalanche trapped everyone at lodge (no escape)'
+        ],
+        'case_summary': '''
+            Stranded at a remote ski lodge by an avalanche, the CEO is found electrocuted in the hot tub.
+            With no way in or out, the killer is definitely among the guests. Was it a disgruntled employee,
+            a jealous lover, or a financial saboteur?
+        '''
+    },
+    {
+        'id': 'bakery_murder',
+        'title': 'The Bitter Crumb',
+        'difficulty': 'Easy',
+        'victim': {
+            'name': 'Martha Butterfield',
+            'age': 65,
+            'role': 'Beloved Pastry Chef',
+            'background': 'Owner of the famous "Sweet Haven Bakery." She recently won a prestigious recipe contest but was known to guard her secret recipes fiercely.'
+        },
+        'crime_scene': {
+            'location': 'Sweet Haven Bakery - Kitchen',
+            'time_of_death': 'Approximately 5:00 AM (before opening)',
+            'weapon': 'Rolling pin (blunt force)',
+            'description': '''
+                The victim was found on the kitchen floor, her prized rolling pin nearby.
+                Flour was scattered everywhere, and her secret recipe book was missing from its locked drawer.
+                A tray of burnt croissants was still in the oven, suggesting a struggle interrupted her work.
+            '''
+        },
+        'suspects_involved': ['A', 'B', 'C'],
+        'connections': {
+            'A': 'Victoria Ashford was a rival baker from across town who had been trying to buy the bakery for years; the victim refused to sell.',
+            'B': 'Marcus Chen was an apprentice baker who was fired last week for trying to photograph the secret recipes.',
+            'C': 'Elena Reyes was a regular customer who had a gambling debt and was seen lingering near the back door the night before.'
+        },
+        'key_evidence': [
+            'Missing secret recipe book',
+            'Burnt croissants (timer stopped)',
+            'Rolling pin with initials "M.B." (victim\'s own)',
+            'Flour footprints leading out the back'
+        ],
+        'case_summary': '''
+            Martha Butterfield, the sweetest baker in town, met a bitter end in her own kitchen.
+            Her famous secret recipes are missing. Was it a jealous rival, a disgruntled apprentice, or a desperate customer?
+        '''
+    },
     # You can add more cases here following the same structure
     # {
     #     'id': 'library_silence',
@@ -550,9 +1220,15 @@ games = {}
 
 def make_game():
     game_id = str(uuid.uuid4())
-    killer_id = random.choice(list(SUSPECT_PROFILES.keys()))
+    
+    # 1. Randomize Suspects
+    available_suspect_ids = list(SUSPECT_PROFILES.keys())
+    chosen_suspect_ids = random.sample(available_suspect_ids, 3)
+    killer_id = random.choice(chosen_suspect_ids)
+    
     suspects = {}
-    for suspect_id, profile in SUSPECT_PROFILES.items():
+    for suspect_id in chosen_suspect_ids:
+        profile = SUSPECT_PROFILES[suspect_id]
         mood, mood_icon = get_mood(20)
         suspects[suspect_id] = {
             'id': suspect_id,
@@ -575,9 +1251,18 @@ def make_game():
             'base_alibi': profile['base_alibi']
         }
     
+    # 2. Randomize Case Details
     selected_case = random.choice(CASE_FILES).copy()
-    if killer_id not in selected_case['suspects_involved']:
-        selected_case['suspects_involved'].append(killer_id)
+    
+    old_conn = list(selected_case.get('connections', {}).values())
+    new_conn = {}
+    for i, sid in enumerate(chosen_suspect_ids):
+        fallback_role = "Was seen near the crime scene."
+        role_text = old_conn[i] if i < len(old_conn) else fallback_role
+        new_conn[sid] = f"{suspects[sid]['name']} - {role_text}"
+    
+    selected_case['connections'] = new_conn
+    selected_case['suspects_involved'] = chosen_suspect_ids
     
     game = {
         'game_id': game_id,
@@ -586,7 +1271,7 @@ def make_game():
         'question_count': 0,
         'questions_asked': 0,
         'time_remaining': TIME_LIMIT_HOURS,
-        'question_history': {sid: [] for sid in SUSPECT_PROFILES.keys()},
+        'question_history': {sid: [] for sid in chosen_suspect_ids},
         'created': True,
         'case': selected_case
     }

@@ -3,76 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retro AI Detective</title>
+  <title>Retro AI Detective - Dim Edition</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="terminal-shell">
-    <section class="terminal-header">
-      <div>
-        <span class="status-dot"></span>
-        <span class="status-dot"></span>
-        <span class="status-dot"></span>
+  <!-- Background Layer -->
+  <div class="bg-wrapper">
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="crt-noise"></div>
+  </div>
+
+  <main class="ui-layer">
+    <!-- Top HUD -->
+    <header class="top-hud panel">
+      <div class="left-hud">
+        <span class="hud-icon" id="case-file-btn" style="cursor: pointer;">📁 CASE FILE</span>
       </div>
-      <h1>🔍 Retro AI Detective</h1>
-      <p>Question suspects A, B, and C to unmask the killer.</p>
+      <div class="center-hud">
+        <span class="time-readout">TIME: <strong id="time-remaining-val">--</strong>H</span>
+      </div>
+      <div class="right-hud">
+        <button id="restart-button-top" class="btn secondary">🔄 RESTART</button>
+      </div>
+    </header>
+
+    <!-- Suspect Area -->
+    <section class="suspect-panel" id="suspect-panel-container">
+      <div class="actions-overlay">
+        <button id="accuse-button" class="btn danger">⚖️ ACCUSE SUSPECT</button>
+      </div>
     </section>
 
-    <section class="controls">
-      <div class="suspect-buttons">
-        <button id="suspect-A" class="suspect-button active">🔴 Suspect A</button>
-        <button id="suspect-B" class="suspect-button">🔵 Suspect B</button>
-        <button id="suspect-C" class="suspect-button">🟡 Suspect C</button>
-      </div>
-      <button id="restart-button" class="action-button">🔄 Restart</button>
-    </section>
-
-
-    <div class="status-panels">
-      <!-- Time Remaining -->
-      <section class="time-panel">
-        <span>⏰ Time Remaining: <strong id="time-remaining-val">--</strong> Hours</span>
-      </section>
-
-      <!-- Tension Meters -->
-      <section class="meter-panel">
-        <div class="meter-row">
-          <span>📊 Tension Levels</span>
-          <div class="meters" id="meter-container"></div>
-        </div>
-      </section>
-    </div>
-
-    <!-- Terminal Output -->
-    <section class="terminal-screen" id="terminal-output"></section>
-
-    <!-- Question Form -->
-    <form id="question-form" class="input-panel">
-      <label for="question-input">❓ Ask your question:</label>
-      <textarea id="question-input" rows="2" placeholder="Type a question for the selected suspect..."></textarea>
-      
-      <!-- Quick Questions -->
-      <div class="quick-questions">
-        <div class="quick-label">⚡ Quick Questions:</div>
-        <div class="quick-buttons">
-          <button type="button" class="quick-btn" data-question="Where were you at the time of the murder?">📍 Where were you?</button>
-          <button type="button" class="quick-btn" data-question="Can anyone verify your alibi?">👤 Verify alibi?</button>
-          <button type="button" class="quick-btn" data-question="What was your relationship with the victim?">💔 Relationship?</button>
-          <button type="button" class="quick-btn" data-question="Did you see or hear anything unusual?">👀 Anything unusual?</button>
-          <button type="button" class="quick-btn" data-question="Why should I believe you?">🤔 Why believe you?</button>
-        </div>
+    <!-- Main Dialogue & Interaction -->
+    <section class="bottom-hud">
+      <div class="dialogue-box panel" id="terminal-output">
+        <!-- Lines will be injected here -->
       </div>
       
-      <div class="input-actions">
-        <button type="submit" class="action-button">💬 Interrogate</button>
-        <button type="button" id="accuse-button" class="action-button accuse">⚖️ Accuse Suspect</button>
-      </div>
-    </form>
-
-    <section class="footer-line">
-      <p>AI responses via OpenRouter • Watch for slips and contradictions</p>
+      <form id="question-form" class="interaction-form panel">
+        <div class="input-row">
+          <label class="prompt-arrow">></label>
+          <input type="text" id="question-input" autocomplete="off" placeholder="Type a question for the active suspect..." />
+          <button type="submit" class="btn primary">ASK QUESTION</button>
+        </div>
+        
+        <div class="quick-actions">
+          <button type="button" class="btn secondary quick-btn" data-question="Where were you at the time of the murder?">📍 ALIBI</button>
+          <button type="button" class="btn secondary quick-btn" data-question="What was your relationship with the victim?">💔 MOTIVE</button>
+          <button type="button" class="btn secondary quick-btn" data-question="Did you see or hear anything unusual?">👀 WITNESS</button>
+        </div>
+      </form>
     </section>
+
   </main>
-  <script src="script.js?v=3"></script>
+  
+  <!-- Case File Modal -->
+  <div id="case-modal" class="modal hidden">
+    <div class="modal-content panel">
+      <div class="modal-header">
+        <h2 id="modal-title">INTERNAL CASE FILE</h2>
+        <button id="close-modal" class="btn secondary">X</button>
+      </div>
+      <div class="modal-body">
+        <div id="case-summary-content">Loading data...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js?v=4"></script>
 </body>
 </html>
