@@ -2,6 +2,7 @@ const BACKEND_URL = '';
 
 let gameId = null;
 let activeSuspect = 'A';
+let currentCase = null;
 
 const terminalOutput = document.getElementById('terminal-output');
 const questionInput = document.getElementById('question-input');
@@ -24,10 +25,16 @@ async function startGame() {
       gameId = data.game_id;
       activeSuspect = 'A';
       updateSuspectSelection();
-      renderMeters(data.suspicion_scores);
+      renderMeters(data.tension_scores);  // Changed from suspicion_scores
       appendSystemLine(data.message);
       appendSystemLine('Choose a suspect and ask a question.');
       terminalOutput.scrollTop = terminalOutput.scrollHeight;
+      
+      // Store case data
+      if (data.case) {
+        currentCase = data.case;
+        updateSuspectButtonsWithIcons(data.suspects);
+      }
     } else {
       appendSystemLine(`Error: ${data.error || 'Unable to start game.'}`);
     }
@@ -36,6 +43,14 @@ async function startGame() {
   }
 }
 
+function updateSuspectButtonsWithIcons(suspects) {
+  suspects.forEach(suspect => {
+    const btn = suspectButtons[suspect.id];
+    if (btn && suspect.icon) {
+      btn.innerHTML = `${suspect.icon} ${suspect.name || 'Suspect ' + suspect.id}`;
+    }
+  });
+}
 
 function updateSuspectSelection() {
   Object.entries(suspectButtons).forEach(([key, button]) => {
@@ -51,6 +66,7 @@ function selectSuspect(suspectId) {
 
 function renderMeters(scores) {
   meterContainer.innerHTML = '';
+  if (!scores) return;
   Object.entries(scores).forEach(([suspectId, score]) => {
     const item = document.createElement('div');
     item.className = 'meter-item';
@@ -60,7 +76,7 @@ function renderMeters(scores) {
 }
 
 function parseActionCues(text) {
-  // Convert *text* to <span class="action-cue">*text*</span>
+  if (!text) return '';
   return text.replace(/\*(.*?)\*/g, '<span class="action-cue">*$1*</span>');
 }
 
@@ -93,8 +109,17 @@ async function interrogate(event) {
     const data = await response.json();
     if (response.ok) {
       appendLine(data.answer, 'line-ai');
-      renderMeters(data.suspicion_scores);
-      appendSystemLine(data.message);
+      if (data.tension_scores) {
+        renderMeters(data.tension_scores);
+      }
+      if (data.time_remaining !== undefined) {
+        appendSystemLine(`⏰ Time remaining: ${data.time_remaining}h | ${data.message}`);
+      } else {
+        appendSystemLine(data.message);
+      }
+      if (data.game_over) {
+        appendSystemLine('=== INVESTIGATION OVER ===');
+      }
     } else {
       appendSystemLine(`Error: ${data.error || 'Unable to interrogate.'}`);
     }
@@ -118,8 +143,12 @@ async function accuseSuspect() {
         appendSystemLine(`=== OUTCOME: ${data.outcome_rank.toUpperCase()} ===`);
       }
       appendSystemLine(data.message);
-      if (data.correct) appendSystemLine('Investigation complete. Restart to play again.');
-      else appendSystemLine('Case closed in failure. Restart to try again.');
+      appendSystemLine(`Questions asked: ${data.questions_asked}`);
+      if (data.correct) {
+        appendSystemLine('Investigation complete. Restart to play again.');
+      } else {
+        appendSystemLine('Case closed in failure. Restart to try again.');
+      }
     } else {
       appendSystemLine(`Error: ${data.error || 'Unable to accuse.'}`);
     }
@@ -128,6 +157,7 @@ async function accuseSuspect() {
   }
 }
 
+// Event Listeners
 suspectButtons.A.addEventListener('click', () => selectSuspect('A'));
 suspectButtons.B.addEventListener('click', () => selectSuspect('B'));
 suspectButtons.C.addEventListener('click', () => selectSuspect('C'));
@@ -144,7 +174,5 @@ document.querySelectorAll('.quick-btn').forEach(btn => {
     interrogate();
   });
 });
-
-
 
 window.addEventListener('load', startGame);
