@@ -1396,7 +1396,7 @@ def call_openrouter(messages):
         return 'OpenRouter API key not configured. Set OPENROUTER_API_KEY environment variable.'
     
     payload = {
-        'model': 'gpt-3.5-turbo',
+        'model': 'meta-llama/llama-2-70b-chat',
         'messages': messages,
         'temperature': 0.75,
         'max_tokens': 220,
