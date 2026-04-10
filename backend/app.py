@@ -11,8 +11,8 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '').strip()
-OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
+XAI_API_KEY = os.environ.get('XAI_API_KEY', '').strip()
+XAI_URL = 'https://api.x.ai/v1/chat/completions'
 TIME_LIMIT_HOURS = 48
 ANTI_GRAVITY_MODE = True
 
@@ -1390,26 +1390,26 @@ CRITICAL DIRECTIVES:
         {'role': 'user', 'content': f"Detective asks (from somewhere in the chamber): {question}"}
     ]
 
-def call_openrouter(messages):
+def call_xai(messages):
     import time
-    if not OPENROUTER_API_KEY:
-        return 'OpenRouter API key not configured. Set OPENROUTER_API_KEY environment variable.'
+    if not XAI_API_KEY:
+        return 'XAI API key not configured. Set XAI_API_KEY environment variable.'
     
     payload = {
-        'model': 'gpt-3.5-turbo',
+        'model': 'grok-beta',
         'messages': messages,
         'temperature': 0.75,
         'max_tokens': 220,
     }
     headers = {
-        'Authorization': f'Bearer {OPENROUTER_API_KEY}',
+        'Authorization': f'Bearer {XAI_API_KEY}',
         'Content-Type': 'application/json',
     }
     
     max_retries = 3
     for attempt in range(max_retries):
         try:
-            response = requests.post(OPENROUTER_URL, json=payload, headers=headers, timeout=30)
+            response = requests.post(XAI_URL, json=payload, headers=headers, timeout=30)
             response.raise_for_status()
             data = response.json()
             if 'choices' in data and data['choices']:
@@ -1421,7 +1421,7 @@ def call_openrouter(messages):
         except Exception as exc:
             # If it's a 401 error, retrying won't help because it's a key issue
             if hasattr(exc, 'response') and exc.response is not None and exc.response.status_code == 401:
-                return f'Error: 401 Unauthorized. Your OpenRouter API key is invalid or missing.'
+                return f'Error: 401 Unauthorized. Your Grok API key is invalid or missing.'
                 
             if attempt == max_retries - 1:
                 return f'Error: {str(exc)}'
@@ -1534,7 +1534,7 @@ def interrogate():
     stress_level = get_stress_level(suspect['score'])
     
     prompt = format_prompt(suspect, question, game, intent, strategy, base_answer, stress_level)
-    answer = call_openrouter(prompt)
+    answer = call_xai(prompt)
     store_answer(game_id, suspect_id, question, answer, strategy)
 
     tension_change, reasons, hours_spent, mood = update_tension(game, suspect_id, question)
