@@ -1647,7 +1647,7 @@ def status():
 
 @app.route('/')
 def serve_index():
-    return send_from_directory('../frontend/static', 'index.html')
+    return send_from_directory('frontend/static', 'index.html')
 
 @app.route('/case/<game_id>', methods=['GET'])
 def get_case_details(game_id):
@@ -1671,8 +1671,8 @@ def get_case_details(game_id):
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory('../frontend/static', path)
+    return send_from_directory('frontend/static', path)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)
