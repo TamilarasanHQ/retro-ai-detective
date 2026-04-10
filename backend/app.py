@@ -4,6 +4,9 @@ import uuid
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -1388,6 +1391,7 @@ CRITICAL DIRECTIVES:
     ]
 
 def call_openrouter(messages):
+    import time
     if not OPENROUTER_API_KEY:
         return 'OpenRouter API key not configured. Set OPENROUTER_API_KEY environment variable.'
     
@@ -1401,18 +1405,27 @@ def call_openrouter(messages):
         'Authorization': f'Bearer {OPENROUTER_API_KEY}',
         'Content-Type': 'application/json',
     }
-    try:
-        response = requests.post(OPENROUTER_URL, json=payload, headers=headers, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-        if 'choices' in data and data['choices']:
-            answer = data['choices'][0].get('message', {}).get('content', '').strip()
-            # Strip action cues like *description* from the response
-            answer = remove_action_cues(answer)
-            return answer
-        return 'The AI failed to produce an answer.'
-    except Exception as exc:
-        return f'Error: {str(exc)}'
+    
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(OPENROUTER_URL, json=payload, headers=headers, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            if 'choices' in data and data['choices']:
+                answer = data['choices'][0].get('message', {}).get('content', '').strip()
+                # Strip action cues like *description* from the response
+                answer = remove_action_cues(answer)
+                return answer
+            return 'The AI failed to produce an answer.'
+        except Exception as exc:
+            # If it's a 401 error, retrying won't help because it's a key issue
+            if hasattr(exc, 'response') and exc.response is not None and exc.response.status_code == 401:
+                return f'Error: 401 Unauthorized. Your OpenRouter API key is invalid or missing.'
+                
+            if attempt == max_retries - 1:
+                return f'Error: {str(exc)}'
+            time.sleep(2)  # Wait before retrying
 
 def remove_action_cues(text):
     """Remove action cues in asterisks from AI responses"""
